@@ -1,0 +1,73 @@
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "127.0.0.1:11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: universal_chatbot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  universal_chatbot_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: universal_chatbot_backend
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - ALLOWED_ORIGINS=http://localhost:5173
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/universal_chatbot
+      - OLLAMA_URL=http://ollama:11434
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - qdrant
+      - ollama
+    command: sh -c "alembic upgrade head && exec uvicorn main:app --host 0.0.0.0 --port 8000"
+    restart: unless-stopped
+
+  universal_chatbot_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: universal_chatbot_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - universal_chatbot_backend
+
+volumes:
+  ollama:
+    external: true
+  qdrant_storage:
+  pgdata:

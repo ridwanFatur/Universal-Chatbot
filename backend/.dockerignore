@@ -1,0 +1,7 @@
+# Ignore note file
+Note.txt
+
+# Ignore environment variables
+.env
+
+commands/

@@ -1,0 +1,12 @@
+# Ignore note file
+Note.txt
+
+# Ignore virtual environment
+venv/
+
+# Ignore Jupyter notebooks folder
+jupyter_notebook/
+
+# Ignore backup folder
+backup/
+.env
