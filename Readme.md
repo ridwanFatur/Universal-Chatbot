@@ -92,6 +92,6 @@ Content-Type: application/json
 
 ## Screenshot
 
-![Screenshot 1](folder/Screenshot-1.png)
-![Screenshot 2](folder/Screenshot-2.png)
-![Screenshot 3](folder/Screenshot-3.png)
+![Screenshot 1](screenshot/Screenshot-1.png)
+![Screenshot 2](screenshot/Screenshot-2.png)
+![Screenshot 3](screenshot/Screenshot-3.png)
