@@ -90,6 +90,10 @@ Content-Type: application/json
   - `qdrant_storage` → persistent vector database
   - `pgdata` → persistent Postgres data
 
+### Demo
+
+![Demo](demo.gif)
+
 ## Screenshot
 
 ![Screenshot 1](screenshot/Screenshot-1.png)
